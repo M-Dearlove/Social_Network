@@ -66,3 +66,55 @@ export const deleteUser = async (req: Request, res: Response) => {
         res.status(500).json(err);
     }
 }
+
+export const addFriend = async (req: Request, res: Response) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        const friend = await User.findById(req.params.friendId);
+
+        if (!user || !friend) {
+            res.status(404).json({ message: 'No user or friend with that id!' });
+            return;
+        }
+
+        if (user.friends.includes(friend._id)) {
+            res.status(400).json({ message: 'Already friends!' });
+            return;
+        }
+
+        user.friends.push(friend._id);
+        friend.friends.push(user._id);
+        await user.save();
+        await friend.save();
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+export const removeFriend = async (req: Request, res: Response) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        const friend = await User.findById(req.params.friendId);
+
+        if (!user || !friend) {
+            res.status(404).json({ message: 'No user or friend with that id!' });
+            return;
+        }
+
+        if (!user.friends.includes(friend._id)) {
+            res.status(400).json({ message: 'Not friends!' });
+            return;
+        }
+
+        user.friends.pull(friend._id);
+        friend.friends.pull(user._id);
+        await user.save();
+        await friend.save();
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}

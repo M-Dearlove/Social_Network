@@ -70,3 +70,39 @@ export const deleteThought = async (req: Request, res: Response) => {
         res.status(500).json(err);
     }
 }
+
+export const addReaction = async (req: Request, res: Response) => {
+    try {
+        const thought = await Thought.findById(req.params.thoughtId);
+        
+        if (!thought) {
+            res.status(404).json({ message: 'No thought with that id!' });
+            return;
+        }
+
+        thought.reactions.push(req.body);
+        await thought.save();
+        res.json(thought);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+export const removeReaction = async (req: Request, res: Response) => {
+    try {
+        const thought = await Thought.findById(req.params.thoughtId);
+        
+        if (!thought) {
+            res.status(404).json({ message: 'No thought with that id!' });
+            return;
+        }
+        
+        // Find and remove the reaction by reactionId
+        thought.reactions.pull({ reactionId: req.params.reactionId });
+        
+        await thought.save();
+        res.json(thought);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
