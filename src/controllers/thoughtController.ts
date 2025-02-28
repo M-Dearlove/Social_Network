@@ -4,8 +4,8 @@ import { Request, Response } from 'express';
 
 export const getThoughts = async (_req: Request, res: Response) => {
     try {
-        const users = await Thought.find();
-        res.json(users);
+        const thoughts = await Thought.find();
+        res.json(thoughts);
     } catch (err) {
         res.status(500).json(err);
     }
@@ -13,13 +13,13 @@ export const getThoughts = async (_req: Request, res: Response) => {
 
 export const getSingleThought = async (req: Request, res: Response) => {
     try {
-        const user = await Thought.findOne({ _id: req.params.userId })
+        const thought = await Thought.findOne({ _id: req.params.thoughtId })
             .select('-__v');
 
-        if (!user) {
+        if (!thought) {
             res.status(404).json({ message: 'No thought with that ID' });
         } else {
-            res.json(user);
+            res.json(thought);
         }
     } catch (err) {
         res.status(500).json(err);

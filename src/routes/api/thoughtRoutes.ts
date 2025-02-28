@@ -3,12 +3,19 @@ import { getThoughts, getSingleThought, createThought, updateThought, deleteThou
 
 const router = Router();
 
-router.route('/').get(getThoughts);
-router.route('/:thoughtId').get(getSingleThought);
-router.route('/').post(createThought);
-router.route('/:thoughtId').put(updateThought);
-router.route('/:thoughtId').delete(deleteThought);
-router.route('/:thoughtId/reactions').post(addReaction);
-router.route('/:thoughtId/reactions/:reactionId').delete(removeReaction);
+router.route('/')
+  .get(getThoughts)
+  .post(createThought);
+
+router.route('/:thoughtId')
+  .get(getSingleThought)
+  .put(updateThought)
+  .delete(deleteThought);
+
+router.route('/:thoughtId/reactions')
+  .post(addReaction);
+
+router.route('/:thoughtId/reactions/:reactionId')
+  .delete(removeReaction);
 
 export default router;
